@@ -103,8 +103,8 @@ window.addEventListener('unhandledrejection', function(event) {
             <div class="chart-container bar-chart-zone" x-ref="barChartZone"></div>
         </section>
         
-        <!-- Chat Envoy -->
-        <div class="chat-envoy-container" x-data="chatEnvoy()">
+        <!-- Chat Envoy (Hidden by default unless in local dev mode) -->
+        <div class="chat-envoy-container local-only" x-data="chatEnvoy()">
             <div class="chat-header">
                 <h3><span class="title-icon">🛰️</span> Sub-Surface Relay</h3>
                 <div class="status-indicator" :class="isTyping ? 'typing' : 'active'"></div>

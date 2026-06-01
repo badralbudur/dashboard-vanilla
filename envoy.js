@@ -1,4 +1,14 @@
 document.addEventListener('alpine:init', () => {
+    // Detect if we are running locally based on hostname
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isLocal) {
+        // Reveal local-only components
+        document.querySelectorAll('.local-only').forEach(el => {
+            el.classList.remove('local-only');
+        });
+    }
+
     Alpine.data('chatEnvoy', () => ({
         messages: [{ role: 'assistant', text: 'Telemetry link established. Awaiting command parameters.' }],
         input: '',

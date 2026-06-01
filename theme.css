@@ -186,6 +186,10 @@ body {
 }
 
 /* Chat Envoy */
+.local-only {
+    display: none !important;
+}
+
 .chat-envoy-container {
     position: fixed;
     bottom: 2rem;
