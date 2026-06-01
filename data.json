@@ -1,0 +1,26 @@
+{
+  "timelines": [
+    {
+      "id": "annotations",
+      "title": "Agent Victories",
+      "color": "#34d399",
+      "icon": "🏆",
+      "data": [
+        { "recorded_at": "2026-05-28T10:00:00Z", "type": "MomentAnnotation", "label": "Setup Complete" },
+        { "recorded_at": "2026-05-29T14:30:00Z", "type": "MomentAnnotation", "label": "Bug Fixed" },
+        { "recorded_at": "2026-05-30T09:15:00Z", "type": "MomentAnnotation", "label": "Deployment Successful" },
+        { "recorded_at": "2026-06-01T16:20:00Z", "type": "MomentAnnotation", "label": "Dashboard Deployed" }
+      ]
+    },
+    {
+      "id": "impact",
+      "title": "System Impact Scans",
+      "color": "#60a5fa",
+      "icon": "📡",
+      "data": [
+        { "recorded_at": "2026-05-27T08:00:00Z", "type": "ScaleAnnotation", "label": "High Load" },
+        { "recorded_at": "2026-05-29T16:00:00Z", "type": "ScaleAnnotation", "label": "Memory Optimized" }
+      ]
+    }
+  ]
+}
