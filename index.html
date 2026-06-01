@@ -13,6 +13,15 @@
     <!-- Alpine.js & D3.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    fetch('/api/chat', {method: 'POST', body: JSON.stringify({error: msg, line: lineNo})});
+};
+window.addEventListener('unhandledrejection', function(event) {
+    fetch('/api/chat', {method: 'POST', body: JSON.stringify({promiseError: event.reason ? event.reason.message : 'Unknown'})});
+});
+</script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans min-h-screen relative" x-data="dashboard()">
     
@@ -107,11 +116,12 @@
                 
                 async init() {
                     try {
-                        const response = await fetch('data.json');
+                        // Use a cache-buster so local development always gets fresh data
+                        const response = await fetch('data.json?t=' + Date.now());
                         const data = await response.json();
                         this.timelines = data.timelines || [];
                         this.recordsProcessed = data.recordsProcessed || [];
-                        console.log("Dashboard initialized.");
+                        console.log("Dashboard initialized with", this.timelines.length, "timelines.");
                     } catch (err) {
                         console.error("Failed to load dashboard data", err);
                     }
