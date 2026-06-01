@@ -1,0 +1,24 @@
+{
+  "name": "dashboard-vanilla",
+  "version": "1.0.0",
+  "description": "",
+  "main": "check.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badralbudur/dashboard-vanilla.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/badralbudur/dashboard-vanilla/issues"
+  },
+  "homepage": "https://github.com/badralbudur/dashboard-vanilla#readme",
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

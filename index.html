@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fulcra Dashboard</title>
     <!-- Tailwind CSS (CDN is permitted for GitHub Pages/Static deployment) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- We removed Tailwind in favor of vanilla CSS to simplify theming. -->
     
     <!-- External Theming CSS -->
     <link rel="stylesheet" href="theme.css">
@@ -28,62 +28,63 @@ window.addEventListener('unhandledrejection', function(event) {
     <!-- ========================================== -->
     <!-- 🏛️ PROVINCE: DASHBOARD LAYOUT & UI         -->
     <!-- ========================================== -->
-    <main class="max-w-6xl mx-auto p-6 relative z-10 layout-container">
+    <main class="layout-container">
         
         <!-- Hero Header -->
-        <header class="mb-12 border-b pb-8 relative rounded-xl overflow-hidden shadow-sm hero-header">
+        <header class="hero-header">
             <!-- Dynamic Hero Image Fallback/Background -->
-            <div class="hero-art-container absolute inset-0 z-0">
+            <div class="hero-art-container">
                 <!-- Agents: Inject the generated image source here -->
                 <img id="hero-img" src="" alt="Theme Art" class="hero-img" style="display:none;" onload="this.style.display='block'" onerror="this.style.display='none'">
             </div>
             
-            <div class="relative z-20 p-8 pt-16 hero-content">
+            <div class="hero-content">
                 <!-- Agents: Inject custom CSS animations/elements into this layer -->
                 <div class="animation-layer"></div>
                 
-                <h1 class="text-5xl font-bold mb-4 flex items-center gap-4 dashboard-title">
+                <h1 class="dashboard-title">
                     <span class="title-icon">📊</span>
                     <span class="title-text">Fulcra Dashboard</span>
                 </h1>
-                <p class="text-xl subtitle">A canvas for your data.</p>
+                <p class="subtitle">A canvas for your data.</p>
             </div>
         </header>
 
         <!-- Dynamic Timelines -->
-        <div class="grid grid-cols-1 gap-8 mb-12">
+        <div class="timelines-grid">
             <template x-for="timeline in timelines" :key="timeline.id">
-                <section class="card bg-white p-6 rounded-xl border border-gray-200 shadow-sm" x-data="timelineComponent(timeline)">
-                    <h2 class="text-2xl font-semibold mb-4 border-b border-gray-100 pb-2 flex items-center gap-3 timeline-title">
+                <section class="card timeline-card" x-data="timelineComponent(timeline)">
+                    <h2 class="timeline-title">
                         <span x-text="timeline.icon" class="timeline-icon"></span>
                         <span x-text="timeline.title"></span>
                     </h2>
                     
-                    <div class="chart-container w-full h-32 relative" x-ref="chartZone" @timeline-hover="hoverIndex = $event.detail.index"></div>
+                    <div class="chart-container timeline-chart-zone" x-ref="chartZone" @timeline-hover="hoverIndex = $event.detail.index"></div>
                     
                     <!-- Logs List -->
-                    <div class="mt-6 flex flex-col gap-4">
+                    <div class="logs-container">
                         <template x-for="detail in displayedDetails" :key="detail.item.recorded_at">
-                            <div class="flex gap-4 items-start p-4 rounded-lg border transition-all duration-300 relative overflow-hidden bg-gray-50 log-entry"
-                                 :style="detail.isHovered ? `border-color: ${timeline.color}; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: scale(1.01);` : 'border-color: #e5e7eb;'">
+                            <div class="log-entry"
+                                 :style="detail.isHovered ? `border-color: ${timeline.color}; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: scale(1.01);` : ''"
+                                 :class="detail.isHovered ? 'hovered' : ''">
                                 
-                                <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border bg-white z-10 log-icon-wrapper"
-                                     :style="`border-color: ${detail.isHovered ? timeline.color : '#e5e7eb'}; color: ${timeline.color};`">
-                                    <span class="text-xl" x-text="getIcon(detail.item)"></span>
+                                <div class="log-icon-wrapper"
+                                     :style="`border-color: ${detail.isHovered ? timeline.color : ''}; color: ${timeline.color};`">
+                                    <span class="log-icon-emoji" x-text="getIcon(detail.item)"></span>
                                 </div>
                                 
-                                <div class="flex-1 z-10">
-                                    <div class="flex justify-between items-center mb-2 border-b border-gray-200 pb-2 log-header">
-                                        <h4 class="font-semibold text-gray-800 m-0 text-sm" 
+                                <div class="log-content-wrapper">
+                                    <div class="log-header">
+                                        <h4 class="log-date" 
                                             x-text="detail.item.parsedDate.toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })">
                                         </h4>
-                                        <span class="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full border log-badge"
+                                        <span class="log-badge"
                                               x-text="getTier(detail.item)">
                                         </span>
                                     </div>
-                                    <p class="text-sm text-gray-600 m-0 log-body">
-                                        <strong class="text-gray-900" x-text="detail.item.label || detail.item.type"></strong><br/>
-                                        <span x-text="detail.item.details || detail.item.size || ''"></span>
+                                    <p class="log-body">
+                                        <strong class="log-label" x-text="detail.item.label || detail.item.type"></strong><br/>
+                                        <span class="log-details" x-text="detail.item.details || detail.item.size || ''"></span>
                                     </p>
                                 </div>
                             </div>
@@ -94,12 +95,12 @@ window.addEventListener('unhandledrejection', function(event) {
         </div>
 
         <!-- Records Processed Bar Chart -->
-        <section class="card bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-12" x-show="recordsProcessed.length > 0" x-data="barChartComponent()" x-effect="updateChart(recordsProcessed)">
-            <h2 class="text-2xl font-semibold mb-4 border-b border-gray-100 pb-2 flex items-center gap-3 timeline-title">
+        <section class="card bar-chart-card" x-show="recordsProcessed.length > 0" x-data="barChartComponent()" x-effect="updateChart(recordsProcessed)">
+            <h2 class="timeline-title">
                 <span class="timeline-icon">📊</span>
                 <span>Records Processed (Data Volume)</span>
             </h2>
-            <div class="w-full relative" style="min-height: 300px;" x-ref="barChartZone"></div>
+            <div class="chart-container bar-chart-zone" x-ref="barChartZone"></div>
         </section>
         
     </main>
