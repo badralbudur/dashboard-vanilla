@@ -10,9 +10,27 @@ document.addEventListener('alpine:init', () => {
     }
 
     Alpine.data('chatEnvoy', () => ({
-        messages: [{ role: 'assistant', text: 'Telemetry link established. Awaiting command parameters.' }],
+        messages: [],
         input: '',
         isTyping: false,
+
+        async init() {
+            if (!isLocal) return; // Do not attempt to fetch on public static hosts
+            
+            try {
+                // Fetch the initial greeting and any history from the Python server
+                const response = await fetch('/api/chat');
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.messages) {
+                        this.messages = result.messages;
+                        this.scrollToBottom();
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not establish connection to local relay.');
+            }
+        },
 
         async sendMessage() {
             if (!this.input.trim()) return;
